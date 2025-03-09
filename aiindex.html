@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Nastaliq+Urdu:wght@400..700&family=Poppins:wght@400;500&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="aistyle.css">
+    <link rel=" stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+</head>
+
+<body>
+    <!-- Full Website for AI IMAGE Generator -->
+    <div class="container">
+        <header class="header">
+            <!-- header navbar   -->
+            <div class="logo-wrapper">
+                <!-- logo part in the navbar header-->
+                <div class="logo">
+                    <i class="fa-solid fa-wand-magic-sparkles"> </i>
+                </div>
+                <!-- heading part in the navbar -->
+                <h1>AI Image Generator</h1>
+            </div>
+            <!-- button for  dark and light theme in navbar header -->
+            <button class="theme-toggle ">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+        </header>
+
+        <!-- main content  -->
+        <div class="main-content">
+            <form action="#" class="prompt-form">
+                <!-- Input Related Content of Prompt Container  -->
+                <div class="prompt-container">
+                    <textarea class="prompt-input" placeholder="Describe your imagination in detail ..." required
+                        autofocus></textarea>
+                    <button type="button" class="prompt-btn">
+                        <i class="fa-solid fa-dice"></i>
+                    </button>
+                </div>
+                <!-- Prompt output related content like result /button  -->
+                <div class="prompt-actions">
+                    <div class="select-wrapper" >
+                        <select class="custom-select" id="model-select" required>
+                            <option value="" selected disabled>Stable Diffusion v1.5</option>
+                            <option value="black-forest-labs/FLUX.1-dev">FLUX.1-dev</option>
+                            <option value="black-forest-labs/FLUX.1-schnell">FLUX.1-schnell</option>
+                            <option value="stabilityai/stable-diffusion-x1-base-1.0">Stable Diffusion XL</option>
+                            <option value="runwayml/stable-diffusion-v1-5">Stable Diffusion v1.5</option>
+                            <option value="prompthero/openjourney">OpenJourney</option>
+                        </select>
+                    </div>
+
+                    <div class="select-wrapper">
+                        <select class="custom-select" id="count-select" required>
+                            <option value="" selected disabled>Image Count</option>
+                            <option value="1">1 Image</option>
+                            <option value="2">2 Image</option>
+                            <option value="3">3 Image</option>
+                            <option value="4">4 Image</option>
+                        </select>
+                    </div>
+
+                    <div class="select-wrapper" >
+                        <select class="custom-select" id="ratio-select" required>
+                            <option value="" selected disabled>Aspect Ratio</option>
+                            <option value="1/1"> Square (1:1)</option>
+                            <option value="16/9">Lanscape(16:9)</option>
+                            <option value="9/16">Portrait(9:16)</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="generate-btn">
+                        <i class="fa-solid fa-wand-sparkles">Generate</i>
+                    </button>
+                </div>
+
+                <div class="gallery-grid">
+                    <!-- <div class="img-card loading">
+                        <div class="status-container">
+                            <div class="spinner"></div>
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <p class="status-text">Generating...</p>
+                        </div>
+                        <img src="test.png" class="result-img">
+                        <div class="img-overlay">
+                            <button class="img-download-btn " >
+                                <i class="fa-solid fa-download"></i>
+                            </button>
+                        </div>
+                    </div>  -->
+
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="aiscript.js"></script>
+</body>
+
+</html>
