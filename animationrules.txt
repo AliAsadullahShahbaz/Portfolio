@@ -1,0 +1,8 @@
+Smooth Scrolling:
+
+1.Attach loco css file cdn
+2.Attach locomotive script file cdn 
+3.Attach smooth scroll class code from github 
+
+Gsap : 
+
