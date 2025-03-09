@@ -8,8 +8,7 @@ const modelSelect = document.getElementById("model-select");
 const countSelect = document.getElementById("count-select");
 const ratioSelect = document.getElementById("ratio-select");
 const gridGallery = document.querySelector(".gallery-grid");
-const img_download_btn = document.querySelectorAll(".img-overlay");
-const apiKey = "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";
+const apiKey = "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";
 const examplePrompts = [
     "A beautiful mosque glowing under the moonlight with intricate calligraphy on its walls",
     "The Kaaba surrounded by worshippers during Hajj, with golden lanterns lighting the night",
@@ -45,46 +44,28 @@ const toggleTheme = () => {
     document.body.classList.toggle("dark-theme", isDarkTheme);
     themeToggle.querySelector("i").className = isDarkTheme ? "fa-solid fa-sun" : "fa-solid fa-moon";
 })()
-// Function to handle image download
-function handleImageDownload(imageURL) {
-    
-    const link = document.createElement("a"); // Create an anchor tag
-    link.href = imageURL;
-    link.download = "downloaded-image.png"; // Set filename
-    document.body.appendChild(link);
-    link.click(); // Trigger download
-    document.body.removeChild(link); // Remove the link after download
-
-    alert("Image will be downloaded.");
-}
 
 // Function to update image card and add event listener for download
-async function updateImageCard(index, imageURL) { 
+async function updateImageCard(index, imageURL) {
     const imgCard = document.getElementById(`img-card-${index}`);
     if (!imgCard) return;
-    
     imgCard.classList.remove("loading");
 
     imgCard.innerHTML = `
         <img src="${imageURL}" class="result-img">
         <div class="img-overlay">
-            <button class="img-download-btn">
+            <a href="${imageURL}" download="download image.png" class="img-download-btn">
                 <i class="fa-solid fa-download"></i>
-            </button>
+            </a>
         </div>`;
-
-    console.log("This is my AI Generated Image URL:", imageURL);
-
-    // Attach event listener to the newly created download button
-    const downloadBtn = imgCard.querySelector(".img-overlay");
-    // downloadBtn.addEventListener("click", handleImageDownload(imageURL));
 }
 // 1.random no. generation 2. setting prompt by value of random no.  3. cursor focus on input box  
-promptbtn.addEventListener("click", () => {
+const generateRandomPrompt = () => {
     const prompt = examplePrompts[Math.floor(Math.random() * examplePrompts.length)];
     promptInput.value = prompt;
     promptInput.focus();
-});
+}
+
 function getImageDimenstion(aspectRatio, baseSize = 512) {
     const [width, height] = aspectRatio.split("/").map(Number);
     const scaleFactor = baseSize / Math.sqrt(width * height);
@@ -103,9 +84,8 @@ async function generateImages(selectedModel, imageCount, aspectRatio, promptText
     const { width, height } = getImageDimenstion(aspectRatio);
     generatebtn.setAttribute("disabled", true);
     // Creating Array to generate images 
-    const imagePromises = Array.from({ length: imageCount }, async (_, i) => {   
-        console.log("----------You have entered prompt : ",promptText,"-------------");   
-          try {
+    const imagePromises = Array.from({ length: imageCount }, async (_, i) => {
+        try {
             // Send Request to API
             const response = await fetch(Model_URL, {
                 method: "POST",
@@ -123,10 +103,9 @@ async function generateImages(selectedModel, imageCount, aspectRatio, promptText
             // if (!response.ok) throw new error((await response.json())?.error);
 
             const result = await response.blob();
-            console.log(i,result);
+            console.log(result);
 
             const imageURL = URL.createObjectURL(result);
-            console.log(imageURL);
             updateImageCard(i, imageURL);
         } catch (error) {
             console.error(error);
@@ -139,7 +118,7 @@ async function generateImages(selectedModel, imageCount, aspectRatio, promptText
     generatebtn.removeAttribute("disabled");
 }
 // Create Placeholder cards with loading spinner 
-const createImageCards = (selectedModel, imageCount, aspectRatio, promptText) => {
+const createImageCards = (imageCount, aspectRatio) => {
     gridGallery.innerHTML = "";
     for (let i = 0; i < imageCount; i++) {
         gridGallery.innerHTML += `<div class="img-card loading" id="img-card-${i}" 
@@ -152,7 +131,6 @@ const createImageCards = (selectedModel, imageCount, aspectRatio, promptText) =>
                         <img src="test.png" class="result-img">
                         </div>`;
     }
-    generateImages(selectedModel, imageCount, aspectRatio, promptText);
 };
 // To Remove the page reload when submit a form
 const handleFormSubmit = (e) => {
@@ -161,7 +139,7 @@ const handleFormSubmit = (e) => {
     const imageCount = parseInt(countSelect.value);
     const aspectRatio = ratioSelect.value || "1/1";
     const promptText = promptInput.value.trim();
-    createImageCards(selectedModel, imageCount, aspectRatio, promptText);
+    createImageCards(imageCount, aspectRatio);
     generateImages(selectedModel, imageCount, aspectRatio, promptText);
 }
 promptInput.addEventListener("input", () => {
@@ -170,5 +148,32 @@ promptInput.addEventListener("input", () => {
 })
 promptForm.addEventListener("submit", handleFormSubmit);
 themeToggle.addEventListener("click", toggleTheme);
+promptbtn.addEventListener("click", generateRandomPrompt);
+document.addEventListener("click", (event) => {
+    const downloadBtn = event.target.closest(".img-download-btn");
+    if (!downloadBtn) return;
 
+    event.preventDefault(); // Prevent default behavior
+
+    const imageURL = downloadBtn.getAttribute("href");
+    console.log("Image URL:", imageURL); // 🔍 Debug: Check if it's a valid URL
+
+    const fileName = "downloaded-image.png";
+
+    fetch(imageURL)
+        .then((response) => response.blob())
+        .then((blob) => {
+            console.log("Blob received:", blob); // 🔍 Check if the image is fetched correctly
+            
+            const blobURL = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = blobURL;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(blobURL);
+        })
+        .catch((error) => console.error("Download failed:", error));
+});
 
